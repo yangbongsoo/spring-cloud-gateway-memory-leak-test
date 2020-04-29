@@ -18,13 +18,32 @@ public class MyApplication {
 	public RouteLocator myRouteLocator(RouteLocatorBuilder builder) {
 		return builder.routes()
 				.route(r -> r.path("/bong")
-						.filters(f -> f.filter(memoryLeakFilter()))
+						.filters(f -> f.filter(noMemoryLeakFilter()))
 						.uri("http://localhost:8000"))
 				.build();
 	}
 
+//	@Bean
+//	public RouteLocator myRouteLocator(RouteLocatorBuilder builder) {
+//		return builder.routes()
+//				.route(r -> r.path("/bong")
+//						.filters(f -> f.filter(memoryLeakFilter()))
+//						.uri("http://localhost:8000"))
+//				.build();
+//	}
+
 	@Bean
 	public MemoryLeakFilter memoryLeakFilter() {
 		return new MemoryLeakFilter();
+	}
+
+	@Bean
+	public NoMemoryLeakFilter noMemoryLeakFilter() {
+		return new NoMemoryLeakFilter();
+	}
+
+	@Bean
+	public NoMemoryLeakFilter2 noMemoryLeakFilter2() {
+		return new NoMemoryLeakFilter2();
 	}
 }
