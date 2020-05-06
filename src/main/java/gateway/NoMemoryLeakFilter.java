@@ -55,15 +55,11 @@ public class NoMemoryLeakFilter implements GatewayFilter {
 		return DataBufferUtils.join(request.getBody())
 				.flatMap(dataBuffer -> {
 					byte[] content = new byte[dataBuffer.readableByteCount()];
-//					logger.info("[NoMemoryLeakFilter] content1 : {}", content);
 					dataBuffer.read(content);
-//					logger.info("[NoMemoryLeakFilter] content2 : {}", content);
-					AtomicReference<String> rawRef = new AtomicReference<>();
-					rawRef.set(Strings.fromUTF8ByteArray(content));
-
+					String body = new String(content, StandardCharsets.UTF_8);
 					DataBufferUtils.release(dataBuffer);
+					MultiValueMap<String, String> requestBodyMap = parseFormData(StandardCharsets.UTF_8, body);
 
-					MultiValueMap<String, String> requestBodyMap = parseFormData(StandardCharsets.UTF_8, rawRef.get());
 					logger.info("[NoMemoryLeakFilter] requestBodyMap : {}", requestBodyMap);
 
 					ServerHttpRequest requestDecorator = new ServerHttpRequestDecorator(exchange.getRequest()) {
