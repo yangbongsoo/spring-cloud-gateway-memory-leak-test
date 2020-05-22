@@ -33,7 +33,7 @@ public class TargetServer {
 		Socket connection;
 		ExecutorService executor = Executors.newFixedThreadPool(10);
 		while ((connection = socket.accept()) != null) {
-			connection.setKeepAlive(true);
+			connection.setKeepAlive(false);
 			int current = count.addAndGet(1);
 			log.debug("received request : {}", current);
 			RequestHandler requestHandler = new RequestHandler(connection);

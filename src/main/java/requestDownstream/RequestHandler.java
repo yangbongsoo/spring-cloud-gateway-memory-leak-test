@@ -1,5 +1,6 @@
 package requestDownstream;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,15 +29,24 @@ public class RequestHandler implements Runnable {
 			out = connection.getOutputStream();
 
 			// request
-			byte[] byteArr = new byte[10000];
-			int readByteCount = in.read(byteArr);
+			DataInputStream dis = new DataInputStream(in);
+			byte[] byteArr = new byte[25000];
+			int readByteCount = dis.read(byteArr);
+			log.info("readByteCount : {}", readByteCount);
 			String data = new String(byteArr, 0, readByteCount, "UTF-8");
-			log.info("request : {}", data);
+
+//			String[] split = data.split("\n");
+//			for (int i = 0; i< split.length; i++) {
+//				System.out.println(i + ": " + split[i]);
+//			}
+//			log.info("request : {}", data);
+
+//			String bodyString = split[split.length-1];
 
 
 			// response
 			DataOutputStream dos = new DataOutputStream(out);
-			byte[] body = "Stable Server Response Message".getBytes();
+			byte[] body = data.getBytes();
 //			response400Header(dos, body.length);
 			response200Header(dos, body.length);
 			responseBody(dos, body);

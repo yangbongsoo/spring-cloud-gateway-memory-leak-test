@@ -2,12 +2,37 @@ package gateway;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-public class MemoryLeakFilterTest {
+public class MultiGetBodyFilter1Test {
+
+	@Test
+	public void name() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+		map.add("test", "asldfjklsadfjlksajflasdjflkasjflkasjflkasjflkasjflkajlkf");
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+		RestTemplate restTemplate = new RestTemplate();
+
+		ResponseEntity<String> postForEntity = restTemplate.postForEntity("http://local-test.navercorp.com:8080/", request, String.class);
+		String body = postForEntity.getBody();
+		System.out.println(body);
+	}
+
 	@Test
 	public void test1() {
 		while (true) {
